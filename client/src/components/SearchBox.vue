@@ -1,6 +1,6 @@
 <template lang="pug">
   .search-box
-    input.search-box__input(placeholder="Search" v-model="valueLocal")
+    input.search-box__input(placeholder="Search" v-model="valueLocal" type=search)
     i.icon-search.search-box__icon
 </template>
 
@@ -38,6 +38,7 @@ export default defineComponent({
     padding: 0 rem-calc(16) 0 rem-calc(32);
     outline: none;
     width: 100%;
+    box-sizing: border-box;
 
     &:focus {
       box-shadow: inset 0 0 4px $color-gray-5;
