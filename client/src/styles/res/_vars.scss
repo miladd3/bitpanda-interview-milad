@@ -1,3 +1,5 @@
+@import "rem";
+
 // Colors
 $color-gray-1: #dbdbdb;
 $color-gray-2: #E5E5E5;
@@ -10,3 +12,9 @@ $color-gray-8: #676767;
 
 $color-green: #5DC2AF;
 $color-green-light: #BDDAD5;
+
+$color-bg: $color-gray-2;
+
+// Layouts
+
+$wrapper-width: rem-calc(589)
