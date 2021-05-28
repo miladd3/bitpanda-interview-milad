@@ -15,11 +15,18 @@ export default defineComponent({
       default: '',
     },
   },
-  setup(props) {
-    const valueLocal = computed(() => props.value);
+  setup(props, { emit }) {
+    const valueLocal = computed({
+      get: () => props.value,
+      set: (val) => {
+        emit('input', val);
+      },
+    });
 
     return { valueLocal };
   },
+  emits: ['input'],
+
 });
 </script>
 
