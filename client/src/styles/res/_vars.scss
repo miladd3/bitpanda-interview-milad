@@ -14,7 +14,15 @@ $color-green: #5DC2AF;
 $color-green-light: #BDDAD5;
 
 $color-bg: $color-gray-2;
+$color-input-border: $color-gray-3;
+$color-input-placeholder: $color-gray-5;
+$color-icon: $color-gray-6;
 
 // Layouts
 
-$wrapper-width: rem-calc(589)
+$wrapper-width: rem-calc(589);
+
+
+  // typography
+
+$font-family: Roboto, sans-serif;
