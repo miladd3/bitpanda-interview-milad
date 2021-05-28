@@ -2,16 +2,20 @@
   #app.todo-app
     .todo-app__wrapper
       SearchBox
+      NewNote.todo-app__new-note
+      .todo-app__notes
+
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
 
+import NewNote from '@/components/NewNote.vue';
 import SearchBox from '@/components/SearchBox.vue';
 
 export default defineComponent({
   name: 'App',
-  components: { SearchBox },
+  components: { NewNote, SearchBox },
   setup() {
     // utilise todo-bitpanda-server to get data
 
@@ -34,9 +38,13 @@ export default defineComponent({
   background: $color-bg;
   height: 100vh;
 
-  .todo-app__wrapper {
+  &__wrapper {
     max-width: $wrapper-width;
     width: 100%;
+  }
+
+  &__new-note {
+    margin-top: rem-calc(16);
   }
 }
 </style>
