@@ -25,6 +25,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     ecmaVersion: 2018,
     sourceType: 'module',
+    createDefaultProgram: true
   },
   rules: {
     'import/no-unresolved': 'off',
@@ -70,5 +71,5 @@ module.exports = {
       },
     ],
     quotes: ['error', 'single'],
-  },
+  }
 };
