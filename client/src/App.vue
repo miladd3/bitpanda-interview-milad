@@ -12,6 +12,8 @@
         :created="item.createdAt"
         @changed="item = $event"
       )
+    div.todo-app__pagination
+      Pagination(has-next has-prev)
 </template>
 
 <script lang="ts">
@@ -19,12 +21,15 @@ import { defineComponent, ref } from 'vue';
 
 import NewNote from '@/components/NewNote.vue';
 import Note from '@/components/Note.vue';
+import Pagination from '@/components/Pagination.vue';
 import SearchBox from '@/components/SearchBox.vue';
 import { Item } from '@/models/item';
 
 export default defineComponent({
   name: 'App',
-  components: { Note, NewNote, SearchBox },
+  components: {
+    Pagination, Note, NewNote, SearchBox,
+  },
   setup() {
     // utilise todo-bitpanda-server to get data
     const items = ref<Array<Item>>([]);
@@ -70,6 +75,12 @@ export default defineComponent({
 
   &__new-note {
     margin-top: rem-calc(16);
+  }
+
+  &__pagination {
+    margin-top: rem-calc(16px);
+    display: flex;
+    flex-direction: row-reverse;
   }
 }
 </style>
