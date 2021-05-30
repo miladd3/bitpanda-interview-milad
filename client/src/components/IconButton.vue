@@ -1,10 +1,12 @@
 <template lang="pug">
   button.button-icon(@click="onClick")
-    i.button-icon__icon(:class="`icon-${icon}`")
+    i.button-icon__icon(:class="`icon-${icon}`" :style="{fontSize: remSize}")
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { computed, defineComponent } from '@vue/composition-api';
+
+import remCalc from '@/utils/rem-calc';
 
 export default defineComponent({
   name: 'IconButton',
@@ -14,13 +16,18 @@ export default defineComponent({
       default: '',
       required: true,
     },
+    size: {
+      type: Number,
+      default: 14,
+    },
   },
   setup(props, { emit }) {
     const onClick = (e: Event) => {
       emit('click', e);
     };
+    const remSize = computed(() => remCalc(props.size));
 
-    return { onClick };
+    return { onClick, remSize };
   },
   emits: ['click'],
 });
@@ -35,10 +42,6 @@ export default defineComponent({
   padding: 0;
   cursor: pointer;
   color: $color-icon;
-
-  &__icon {
-    font-size: rem-calc(14);
-  }
 
   &:hover {
     color: darken($color-icon,20);

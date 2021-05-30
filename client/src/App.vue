@@ -4,23 +4,48 @@
       SearchBox
       NewNote.todo-app__new-note
       .todo-app__notes
-
+        Note(
+          v-for="item in items"
+          :key="item._id"
+          :description="item.description"
+          :done="item.done"
+          :created="item.createdAt"
+          @changed="item = $event"
+        )
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from '@vue/composition-api';
 
 import NewNote from '@/components/NewNote.vue';
+import Note from '@/components/Note.vue';
 import SearchBox from '@/components/SearchBox.vue';
+import { Item } from '@/models/item';
 
 export default defineComponent({
   name: 'App',
-  components: { NewNote, SearchBox },
+  components: { Note, NewNote, SearchBox },
   setup() {
     // utilise todo-bitpanda-server to get data
+    const items = ref<Array<Item>>([]);
+
+    items.value = [
+      {
+        _id: '12123123123',
+        done: true,
+        description: 'oh yes',
+        createdAt: '2020-11-05T07:52:21.235Z',
+      },
+      {
+        _id: '121231223123',
+        done: false,
+        description: 'oh yes',
+        createdAt: '2020-11-05T07:52:21.235Z',
+      }];
 
     return {
       message: 'Todo list should be here',
+      items,
     };
   },
 });

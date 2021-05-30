@@ -40,6 +40,7 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   border: 1px solid $color-checkbox-border;
+  cursor: pointer;
 
   &__input {
     display: none;
