@@ -1,10 +1,10 @@
 <template lang="pug">
-  button.button-icon(@click="onClick")
-    i.button-icon__icon(:class="`icon-${icon}`" :style="{fontSize: remSize}")
+button.button-icon(@click="onClick")
+  i.button-icon__icon(:class="`icon-${icon}`" :style="{fontSize: remSize}")
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@vue/composition-api';
+import { computed, defineComponent } from 'vue';
 
 import remCalc from '@/utils/rem-calc';
 

@@ -32,9 +32,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx",
-    "*.conf*.js",
-    ".eslintrc.js"
+    "tests/**/*.tsx"
   ],
   "exclude": [
     "node_modules"

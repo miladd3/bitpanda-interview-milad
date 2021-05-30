@@ -3,34 +3,38 @@ const { resolve } = require('path');
 
 module.exports = {
   root: true,
+
   env: {
     node: true,
   },
-  extends: [
-    'eslint:recommended',
 
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
-
-    '@vue/typescript',
-    'plugin:vue/essential',
-
-    'airbnb-base',
-  ],
   parserOptions: {
     extraFileExtensions: ['.vue'],
     parser: '@typescript-eslint/parser',
-    project: resolve(__dirname, './tsconfig.json'),
-    tsconfigRootDir: __dirname,
+    project: '/Users/miladdehghansh/Projects/bitpanda-interview-milad/client/tsconfig.json',
+    tsconfigRootDir: '/Users/miladdehghansh/Projects/bitpanda-interview-milad/client',
     ecmaVersion: 2018,
     sourceType: 'module',
     createDefaultProgram: true
   },
+
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    '@vue/typescript',
+    'plugin:vue/vue3-essential',
+    'airbnb-base'
+  ],
   rules: {
     'import/no-unresolved': 'off',
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
     'import/order': ['error', {
       alphabetize: {
         caseInsensitive: true,
@@ -71,5 +75,6 @@ module.exports = {
       },
     ],
     quotes: ['error', 'single'],
-  }
+  },
+
 };

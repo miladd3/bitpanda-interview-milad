@@ -1,31 +1,31 @@
 <template lang="pug">
-  label.check-box(:class="{'check-box__checked': valueLocal}")
-    input.check-box__input(type="checkbox" v-model="valueLocal")
-    i.icon-check.check-box__icon
+label.check-box(:class="{'check-box__checked': valueLocal}")
+  input.check-box__input(type="checkbox" v-model="valueLocal")
+  i.icon-check.check-box__icon
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@vue/composition-api';
+import { computed, defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'CheckBox',
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: '',
     },
   },
   setup(props, { emit }) {
     const valueLocal = computed({
-      get: () => props.value,
+      get: () => props.modelValue,
       set: (val) => {
-        emit('input', val);
+        emit('update:modelValue', val);
       },
     });
 
     return { valueLocal };
   },
-  emits: ['input'],
+  emits: ['update:modelValue'],
 });
 </script>
 

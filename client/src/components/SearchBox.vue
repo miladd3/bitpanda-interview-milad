@@ -1,11 +1,11 @@
 <template lang="pug">
-  .search-box
-    input.search-box__input(placeholder="Search" v-model="valueLocal" type=search)
-    i.icon-search.search-box__icon
+.search-box
+  input.search-box__input(placeholder="Search" v-model="valueLocal" type=search)
+  i.icon-search.search-box__icon
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@vue/composition-api';
+import { computed, defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'SearchBox',

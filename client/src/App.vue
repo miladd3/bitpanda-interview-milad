@@ -1,21 +1,21 @@
 <template lang="pug">
-  #app.todo-app
-    .todo-app__wrapper
-      SearchBox
-      NewNote.todo-app__new-note
-      .todo-app__notes
-        Note(
-          v-for="item in items"
-          :key="item._id"
-          :description="item.description"
-          :done="item.done"
-          :created="item.createdAt"
-          @changed="item = $event"
-        )
+#app.todo-app
+  .todo-app__wrapper
+    SearchBox
+    NewNote.todo-app__new-note
+    .todo-app__notes
+      Note(
+        v-for="item in items"
+        :key="item._id"
+        :description="item.description"
+        :done="item.done"
+        :created="item.createdAt"
+        @changed="item = $event"
+      )
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api';
+import { defineComponent, ref } from 'vue';
 
 import NewNote from '@/components/NewNote.vue';
 import Note from '@/components/Note.vue';

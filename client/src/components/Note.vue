@@ -1,27 +1,23 @@
 <template lang="pug">
-  .note(:class="{'note__done': done, 'note__edit': edit}")
-    CheckBox.note__checkbox(v-model="done")
-    input.note__input(
-      type="text"
-      v-model="description"
-      @focus="onFocus"
-      @blur="onBlur"
-      @change="onDescChange"
-      )
-    .note__desc {{ description }}
-      span.note__time(v-if="created") {{formattedTime}}
-    IconButton.note__remove(icon="remove" :size="11")
+.note(:class="{'note__done': localItem.done, 'note__edit': edit}")
+  CheckBox.note__checkbox(v-model="localItem.done")
+  input.note__input(
+    type="text"
+    v-model="localItem.description"
+    @focus="onFocus"
+    @blur="onBlur"
+  )
+  .note__desc {{ localItem.description }}
+    span.note__time(v-if="created") {{formattedTime}}
+  IconButton.note__remove(icon="remove" :size="11")
 </template>
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-
-import { computed, defineComponent, ref } from '@vue/composition-api';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import {
+  computed, defineComponent, ref, reactive,
+} from 'vue';
 
 import CheckBox from '@/components/CheckBox.vue';
 import IconButton from '@/components/IconButton.vue';
@@ -45,9 +41,12 @@ export default defineComponent({
       default: '',
     },
   },
-  // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
-  setup(props, { emit }) {
+  setup(props) {
     const edit = ref(false);
+    const localItem = reactive({
+      done: props.done,
+      description: props.description,
+    });
 
     const onFocus = () => {
       edit.value = true;
@@ -56,17 +55,13 @@ export default defineComponent({
       edit.value = false;
     };
 
-    const onDescChange = (e : Event) => {
-      emit('update-desc', (e.target as HTMLInputElement).value);
-    };
-
     const formattedTime = computed<string>(() => dayjs(props.created).fromNow(true));
 
     return {
-      edit, onFocus, onBlur, onDescChange, formattedTime,
+      edit, onFocus, onBlur, formattedTime, localItem,
     };
   },
-  emits: ['changed'],
+  emits: ['desc-changed'],
 });
 </script>
 

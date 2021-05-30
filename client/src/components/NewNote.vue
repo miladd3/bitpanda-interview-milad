@@ -1,11 +1,11 @@
 <template lang="pug">
-  form.new-note
-    input.new-note__input(type=text placeholder="Take a note" v-model="valueLocal")
-    IconButton.new-note__btn(icon="add")
+form.new-note
+  input.new-note__input(type=text placeholder="Take a note" v-model="valueLocal")
+  IconButton.new-note__btn(icon="add")
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@vue/composition-api';
+import { computed, defineComponent } from 'vue';
 
 import IconButton from '@/components/IconButton.vue';
 
@@ -19,7 +19,7 @@ export default defineComponent({
   },
   components: { IconButton },
   setup(props, { emit }) {
-    const valueLocal = computed({
+    const valueLocal = computed<string>({
       get: () => props.value,
       set: (val) => {
         emit('input', val);
