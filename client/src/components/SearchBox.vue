@@ -1,6 +1,6 @@
 <template lang="pug">
 .search-box
-  input.search-box__input(placeholder="Search" v-model="valueLocal" type=search)
+  input.search-box__input(placeholder="Search" v-model="valueLocal" type="search")
   i.icon-search.search-box__icon
 </template>
 
@@ -10,22 +10,22 @@ import { computed, defineComponent } from 'vue';
 export default defineComponent({
   name: 'SearchBox',
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: '',
     },
   },
   setup(props, { emit }) {
     const valueLocal = computed({
-      get: () => props.value,
+      get: () => props.modelValue,
       set: (val) => {
-        emit('input', val);
+        emit('update:modelValue', val);
       },
     });
 
     return { valueLocal };
   },
-  emits: ['input'],
+  emits: ['update:modelValue'],
 
 });
 </script>

@@ -1,7 +1,8 @@
 <template lang="pug">
 #app.todo-app
   .todo-app__wrapper
-    SearchBox
+    SearchBox(v-model="searchKey")
+    .todo-app__search-title(v-if="searchKey") searching for {{searchKey}}
     NewNote.todo-app__new-note(@submit="newNoteSubmit" v-model="newNote")
     .todo-app__notes(v-if="items.length")
       Note(
@@ -19,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 
 import api from '@/api';
@@ -38,16 +39,16 @@ export default defineComponent({
     const items = ref<Array<Item>>([]);
     const hasNextPage = ref<boolean>(false);
     const hasPrevPage = ref<boolean>(false);
-    const offset = ref(0);
     const perPage = parseInt(process.env.VUE_APP_PER_PAGE, 10);
     const loadingId = ref('');
     const loading = ref(false);
     const newNote = ref('');
     const toast = useToast();
 
-    const getTodos = (limit = perPage) => {
+    const offset = ref(0);
+    const getTodos = (limit = perPage, description?: string) => {
       loading.value = true;
-      api.todo.get({ limit, offset: offset.value }).then((res) => {
+      api.todo.get({ limit, offset: offset.value, description }).then((res) => {
         items.value = res.data.items;
         hasNextPage.value = res.data.meta.hasNextPage;
         hasPrevPage.value = res.data.meta.hasPrevPage;
@@ -108,8 +109,21 @@ export default defineComponent({
       });
     };
 
+    const searchKey = ref('');
+
+    watch(
+      searchKey,
+      (key) => {
+        if (key) {
+          offset.value = 0;
+          getTodos(perPage, key);
+        } else {
+          getTodos(perPage);
+        }
+      },
+    );
+
     return {
-      message: 'Todo list should be here',
       items,
       hasPrevPage,
       hasNextPage,
@@ -121,6 +135,7 @@ export default defineComponent({
       onDone,
       loadingId,
       newNote,
+      searchKey,
     };
   },
   mounted() {
@@ -156,6 +171,11 @@ export default defineComponent({
     margin-top: rem-calc(16px);
     display: flex;
     flex-direction: row-reverse;
+  }
+
+  &__search-title {
+    font-weight: 200;
+    margin-top: rem-calc(16);
   }
 }
 </style>
