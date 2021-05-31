@@ -42,7 +42,7 @@ export default defineComponent({
     font-weight: 400;
     font-family: $font-family;
     padding: 0 rem-calc(50) 0 rem-calc(30);
-    border-radius: rem-calc(12);
+    border-radius: rem-calc(12) rem-calc(12) 0 0;
     box-sizing: border-box;
 
     &::placeholder {
@@ -60,9 +60,9 @@ export default defineComponent({
     right: rem-calc(10);
   }
 
-  &:first-child {
+  &:last-child {
     .new-note__input {
-      border-radius: rem-calc(12) rem-calc(12) 0 0;
+      border-radius: rem-calc(12);
     }
   }
 

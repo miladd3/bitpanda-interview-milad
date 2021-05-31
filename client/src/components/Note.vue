@@ -35,9 +35,14 @@ export default defineComponent({
       default: '',
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const edit = ref(false);
-    const localDone = ref(props.done);
+    const localDone = computed<boolean>({
+      get: () => props.done,
+      set: (val:boolean) => {
+        emit('done', val);
+      },
+    });
 
     const onFocus = () => {
       edit.value = true;
@@ -52,7 +57,7 @@ export default defineComponent({
       edit, onFocus, onBlur, formattedTime, localDone,
     };
   },
-  emits: ['delete'],
+  emits: ['delete', 'done'],
 });
 </script>
 

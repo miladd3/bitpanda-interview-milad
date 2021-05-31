@@ -16,6 +16,9 @@ const todo = ($axios: AxiosInstance) => ({
   delete(id: string) {
     return $axios.delete(`todo/${id}`);
   },
+  change(id: string, doneState: boolean) {
+    return $axios.put(`todo/${id}`, { done: doneState });
+  },
 });
 
 export default todo;

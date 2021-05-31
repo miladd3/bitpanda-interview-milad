@@ -3,15 +3,15 @@
   .todo-app__wrapper
     SearchBox
     NewNote.todo-app__new-note(@submit="newNoteSubmit")
-    .todo-app__notes
+    .todo-app__notes(v-if="items.length")
       Note(
         v-for="item in items"
         :key="item._id"
         :description="item.description"
         :done="item.done"
         :created="item.createdAt"
-        @changed="item = $event"
         @delete="deleteNote(item._id)"
+        @done="onDone(item._id, $event)"
       )
     div.todo-app__pagination(v-if="hasNextPage || hasPrevPage")
       Pagination(:has-next="hasNextPage" :has-prev="hasPrevPage" @next="nextPage" @prev="prevPage")
@@ -38,15 +38,18 @@ export default defineComponent({
     const hasPrevPage = ref<boolean>(false);
     const offset = ref(0);
     const perPage = parseInt(process.env.VUE_APP_PER_PAGE, 10);
+    const loadingId = ref('');
+    const loading = ref(false);
 
     const getTodos = (limit = perPage) => {
+      loading.value = true;
       api.todo.get({ limit, offset: offset.value }).then((res) => {
         items.value = res.data.items;
         hasNextPage.value = res.data.meta.hasNextPage;
         hasPrevPage.value = res.data.meta.hasPrevPage;
       }).catch((e) => {
         console.error(e);
-      });
+      }).finally(() => { loading.value = false; });
     };
 
     const nextPage = () => {
@@ -68,10 +71,32 @@ export default defineComponent({
     };
 
     const deleteNote = (id: string) => {
+      loadingId.value = id;
       api.todo.delete(id).then(() => {
         getTodos();
       }).catch((e) => {
         console.error(e);
+      }).finally(() => {
+        loadingId.value = '';
+      });
+    };
+
+    const onDone = (id: string, isDone: boolean) => {
+      loadingId.value = id;
+
+      api.todo.change(id, isDone).then((res) => {
+        items.value = items.value.map((item) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (item._id === id) {
+            return res.data;
+          }
+
+          return item;
+        });
+      }).catch((e) => {
+        console.error(e);
+      }).finally(() => {
+        loadingId.value = '';
       });
     };
 
@@ -85,6 +110,7 @@ export default defineComponent({
       getTodos,
       newNoteSubmit,
       deleteNote,
+      onDone,
     };
   },
   mounted() {
