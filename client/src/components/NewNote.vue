@@ -1,34 +1,30 @@
 <template lang="pug">
-form.new-note
-  input.new-note__input(type=text placeholder="Take a note" v-model="valueLocal")
+form.new-note(@submit.prevent="onSubmit")
+  input.new-note__input(type=text placeholder="Take a note" v-model="desc" )
   IconButton.new-note__btn(icon="add")
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 import IconButton from '@/components/IconButton.vue';
 
 export default defineComponent({
   name: 'NewNote',
-  props: {
-    value: {
-      type: String,
-      default: '',
-    },
+  setup(props, { emit }) {
+    const desc = ref();
+
+    const onSubmit = () => {
+      if (desc.value) {
+        emit('submit', desc.value);
+        desc.value = '';
+      }
+    };
+
+    return { desc, onSubmit };
   },
   components: { IconButton },
-  setup(props, { emit }) {
-    const valueLocal = computed<string>({
-      get: () => props.value,
-      set: (val) => {
-        emit('input', val);
-      },
-    });
-
-    return { valueLocal };
-  },
-  emits: ['input'],
+  emits: ['submit'],
 });
 </script>
 
@@ -46,7 +42,7 @@ export default defineComponent({
     font-weight: 400;
     font-family: $font-family;
     padding: 0 rem-calc(50) 0 rem-calc(30);
-    border-radius: rem-calc(12) rem-calc(12) 0 0;
+    border-radius: rem-calc(12);
     box-sizing: border-box;
 
     &::placeholder {
@@ -62,6 +58,12 @@ export default defineComponent({
   &__btn {
     position: absolute;
     right: rem-calc(10);
+  }
+
+  &:first-child {
+    .new-note__input {
+      border-radius: rem-calc(12) rem-calc(12) 0 0;
+    }
   }
 
 }

@@ -2,7 +2,7 @@
 #app.todo-app
   .todo-app__wrapper
     SearchBox
-    NewNote.todo-app__new-note
+    NewNote.todo-app__new-note(@submit="newNoteSubmit")
     .todo-app__notes
       Note(
         v-for="item in items"
@@ -11,13 +11,13 @@
         :done="item.done"
         :created="item.createdAt"
         @changed="item = $event"
+        @delete="deleteNote(item._id)"
       )
-    div.todo-app__pagination
-      Pagination(has-next has-prev)
+    div.todo-app__pagination(v-if="hasNextPage || hasPrevPage")
+      Pagination(:has-next="hasNextPage" :has-prev="hasPrevPage" @next="nextPage" @prev="prevPage")
 </template>
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { defineComponent, ref } from 'vue';
 
 import api from '@/api';
@@ -25,7 +25,7 @@ import NewNote from '@/components/NewNote.vue';
 import Note from '@/components/Note.vue';
 import Pagination from '@/components/Pagination.vue';
 import SearchBox from '@/components/SearchBox.vue';
-import { Item } from '@/models/item';
+import { Item } from '@/models/Item';
 
 export default defineComponent({
   name: 'App',
@@ -33,18 +33,62 @@ export default defineComponent({
     Pagination, Note, NewNote, SearchBox,
   },
   setup() {
-    // utilise todo-bitpanda-server to get data
     const items = ref<Array<Item>>([]);
+    const hasNextPage = ref<boolean>(false);
+    const hasPrevPage = ref<boolean>(false);
+    const offset = ref(0);
+    const perPage = parseInt(process.env.VUE_APP_PER_PAGE, 10);
 
-    api.todo.getTodo({ limit: 12 }).then((res) => {
-      items.value = res.data.items;
-      console.log(res.data);
-    });
+    const getTodos = (limit = perPage) => {
+      api.todo.get({ limit, offset: offset.value }).then((res) => {
+        items.value = res.data.items;
+        hasNextPage.value = res.data.meta.hasNextPage;
+        hasPrevPage.value = res.data.meta.hasPrevPage;
+      }).catch((e) => {
+        console.error(e);
+      });
+    };
+
+    const nextPage = () => {
+      offset.value += perPage;
+      getTodos();
+    };
+
+    const prevPage = () => {
+      offset.value -= perPage;
+      getTodos();
+    };
+
+    const newNoteSubmit = (desc: string) => {
+      api.todo.create(desc).then(() => {
+        getTodos();
+      }).catch((e) => {
+        console.error(e);
+      });
+    };
+
+    const deleteNote = (id: string) => {
+      api.todo.delete(id).then(() => {
+        getTodos();
+      }).catch((e) => {
+        console.error(e);
+      });
+    };
 
     return {
       message: 'Todo list should be here',
       items,
+      hasPrevPage,
+      hasNextPage,
+      nextPage,
+      prevPage,
+      getTodos,
+      newNoteSubmit,
+      deleteNote,
     };
+  },
+  mounted() {
+    this.getTodos();
   },
 });
 </script>
@@ -59,7 +103,9 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   background: $color-bg;
-  height: 100vh;
+  min-height: 100vh;
+  padding: rem-calc(16px);
+  box-sizing: border-box;
 
   &__wrapper {
     max-width: $wrapper-width;
