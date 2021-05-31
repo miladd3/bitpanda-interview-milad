@@ -12,6 +12,7 @@
         :created="item.createdAt"
         @delete="deleteNote(item._id)"
         @done="onDone(item._id, $event)"
+        :loading="item._id === loadingId"
       )
     div.todo-app__pagination(v-if="hasNextPage || hasPrevPage")
       Pagination(:has-next="hasNextPage" :has-prev="hasPrevPage" @next="nextPage" @prev="prevPage")
@@ -83,7 +84,6 @@ export default defineComponent({
 
     const onDone = (id: string, isDone: boolean) => {
       loadingId.value = id;
-
       api.todo.change(id, isDone).then((res) => {
         items.value = items.value.map((item) => {
           // eslint-disable-next-line no-underscore-dangle
@@ -111,6 +111,7 @@ export default defineComponent({
       newNoteSubmit,
       deleteNote,
       onDone,
+      loadingId,
     };
   },
   mounted() {

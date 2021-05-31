@@ -3,7 +3,9 @@
   CheckBox.note__checkbox(v-model="localDone")
   .note__desc {{ description }}
     span.note__time(v-if="created") {{formattedTime}}
-  IconButton.note__remove(icon="remove" :size="11" @click="$emit('delete')")
+  IconButton.note__remove(icon="remove" :size="11" @click="$emit('delete')" v-if="!loading")
+  .note__loading(v-else)
+    img(:src="puff" )
 </template>
 
 <script lang="ts">
@@ -13,6 +15,7 @@ import {
   computed, defineComponent, ref,
 } from 'vue';
 
+import puff from '@/assets/img/puff.svg';
 import CheckBox from '@/components/CheckBox.vue';
 import IconButton from '@/components/IconButton.vue';
 
@@ -34,6 +37,10 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props, { emit }) {
     const edit = ref(false);
@@ -54,7 +61,7 @@ export default defineComponent({
     const formattedTime = computed<string>(() => dayjs(props.created).fromNow(true));
 
     return {
-      edit, onFocus, onBlur, formattedTime, localDone,
+      edit, onFocus, onBlur, formattedTime, localDone, puff,
     };
   },
   emits: ['delete', 'done'],
@@ -118,6 +125,10 @@ export default defineComponent({
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  &__loading img{
+    width: rem-calc(30);
   }
 }
 </style>
