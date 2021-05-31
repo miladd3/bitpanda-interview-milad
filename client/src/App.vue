@@ -2,7 +2,7 @@
 #app.todo-app
   .todo-app__wrapper
     SearchBox
-    NewNote.todo-app__new-note(@submit="newNoteSubmit")
+    NewNote.todo-app__new-note(@submit="newNoteSubmit" v-model="newNote")
     .todo-app__notes(v-if="items.length")
       Note(
         v-for="item in items"
@@ -20,6 +20,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useToast } from 'vue-toastification';
 
 import api from '@/api';
 import NewNote from '@/components/NewNote.vue';
@@ -41,6 +42,8 @@ export default defineComponent({
     const perPage = parseInt(process.env.VUE_APP_PER_PAGE, 10);
     const loadingId = ref('');
     const loading = ref(false);
+    const newNote = ref('');
+    const toast = useToast();
 
     const getTodos = (limit = perPage) => {
       loading.value = true;
@@ -50,6 +53,7 @@ export default defineComponent({
         hasPrevPage.value = res.data.meta.hasPrevPage;
       }).catch((e) => {
         console.error(e);
+        toast.error('error getting todos from server');
       }).finally(() => { loading.value = false; });
     };
 
@@ -66,8 +70,10 @@ export default defineComponent({
     const newNoteSubmit = (desc: string) => {
       api.todo.create(desc).then(() => {
         getTodos();
+        newNote.value = '';
       }).catch((e) => {
         console.error(e);
+        toast.error('error creating newNote');
       });
     };
 
@@ -77,6 +83,7 @@ export default defineComponent({
         getTodos();
       }).catch((e) => {
         console.error(e);
+        toast.error('error deleting note');
       }).finally(() => {
         loadingId.value = '';
       });
@@ -95,6 +102,7 @@ export default defineComponent({
         });
       }).catch((e) => {
         console.error(e);
+        toast.error('error changing note');
       }).finally(() => {
         loadingId.value = '';
       });
@@ -112,6 +120,7 @@ export default defineComponent({
       deleteNote,
       onDone,
       loadingId,
+      newNote,
     };
   },
   mounted() {

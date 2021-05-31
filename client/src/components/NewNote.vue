@@ -5,26 +5,36 @@ form.new-note(@submit.prevent="onSubmit")
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 import IconButton from '@/components/IconButton.vue';
 
 export default defineComponent({
   name: 'NewNote',
+  props: {
+    modelValue: {
+      type: String,
+      default: '',
+    },
+  },
   setup(props, { emit }) {
-    const desc = ref();
+    const desc = computed({
+      get: () => props.modelValue,
+      set: (val) => {
+        emit('update:modelValue', val);
+      },
+    });
 
     const onSubmit = () => {
       if (desc.value) {
         emit('submit', desc.value);
-        desc.value = '';
       }
     };
 
     return { desc, onSubmit };
   },
   components: { IconButton },
-  emits: ['submit'],
+  emits: ['submit', 'update:modelValue'],
 });
 </script>
 
