@@ -17,8 +17,10 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { defineComponent, ref } from 'vue';
 
+import api from '@/api';
 import NewNote from '@/components/NewNote.vue';
 import Note from '@/components/Note.vue';
 import Pagination from '@/components/Pagination.vue';
@@ -34,19 +36,10 @@ export default defineComponent({
     // utilise todo-bitpanda-server to get data
     const items = ref<Array<Item>>([]);
 
-    items.value = [
-      {
-        _id: '12123123123',
-        done: true,
-        description: 'oh yes',
-        createdAt: '2020-11-05T07:52:21.235Z',
-      },
-      {
-        _id: '121231223123',
-        done: false,
-        description: 'oh yes',
-        createdAt: '2020-11-05T07:52:21.235Z',
-      }];
+    api.todo.getTodo({ limit: 12 }).then((res) => {
+      items.value = res.data.items;
+      console.log(res.data);
+    });
 
     return {
       message: 'Todo list should be here',
